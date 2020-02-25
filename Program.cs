@@ -12,34 +12,39 @@ namespace AsycTaskTimerTest
         static async Task Main(string[] args)
         {
             
-            async Task<bool> ProcessRepositories()
+            async Task<bool> testJson()
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
-                var stringTask = client.GetStringAsync("https://adapt.mcpl.ga/api/v1/vehicle");
-                var msg = await stringTask;
-                return msg.Length > 1;
+                try
+                {
+                    var stringTask = await client.GetStringAsync("https://adapt.mcpl.ga/api/v1/team");
+                    return stringTask.Length > 1;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Call back returns ==> {0} at {1} err:----> {3}", false, DateTime.Now, e);
+                    return false;
+                }
             }
 
             async Task firstTask()
             {
-                void firstEvent(object source, System.Timers.ElapsedEventArgs e)
-                {
-                    Task.Factory.StartNew(async () => Console.WriteLine("Call back 1 returns ==> {0} at {1}", await ProcessRepositories(), DateTime.Now));
-                }
                 var firstTimer = new System.Timers.Timer {Interval = 3000, AutoReset = true, Enabled = true};
-                firstTimer.Elapsed += firstEvent;
+                firstTimer.Elapsed += (object source, System.Timers.ElapsedEventArgs e) =>
+                {
+                    Task.Factory.StartNew(async () => Console.WriteLine("Call back 1 returns ==> {0} at {1}", await testJson(), DateTime.Now));
+                };
             }
             
             async Task secTask()
             {
-                void secEvent(object source, System.Timers.ElapsedEventArgs e)
-                {
-                    Task.Factory.StartNew(async () => Console.WriteLine("Call back 2 returns ==> {0} at {1}", await ProcessRepositories(), DateTime.Now));
-                }
                 var secTimer = new System.Timers.Timer {Interval = 1500, AutoReset = true, Enabled = true};
-                secTimer.Elapsed += secEvent;
+                secTimer.Elapsed += (object source, System.Timers.ElapsedEventArgs e) =>
+                {
+                    Task.Factory.StartNew(async () => Console.WriteLine("Call back 2 returns ==> {0} at {1}", await testJson(), DateTime.Now));
+                };
             }
 
             await firstTask();
