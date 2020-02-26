@@ -31,19 +31,23 @@ namespace AsycTaskTimerTest
 
             async Task firstTask()
             {
-                var firstTimer = new System.Timers.Timer {Interval = 3000, AutoReset = true, Enabled = true};
+                var firstTimer = new System.Timers.Timer {Interval = 4200, AutoReset = true, Enabled = true};
                 firstTimer.Elapsed += (object source, System.Timers.ElapsedEventArgs e) =>
                 {
-                    Task.Factory.StartNew(async () => Console.WriteLine("Call back 1 returns ==> {0} at {1}", await testJson(), DateTime.Now));
+                    var curDate = DateTime.Now;
+                    Console.WriteLine("----> Started new call-01 at {0} <----", curDate);
+                    Task.Factory.StartNew(async () => Console.WriteLine("===>> Call back 1 returns ==> {0} at {1} then ended by {2}", await testJson(), curDate, DateTime.Now));
                 };
             }
             
             async Task secTask()
             {
-                var secTimer = new System.Timers.Timer {Interval = 1500, AutoReset = true, Enabled = true};
+                var secTimer = new System.Timers.Timer {Interval = 2500, AutoReset = true, Enabled = true};
                 secTimer.Elapsed += (object source, System.Timers.ElapsedEventArgs e) =>
                 {
-                    Task.Factory.StartNew(async () => Console.WriteLine("Call back 2 returns ==> {0} at {1}", await testJson(), DateTime.Now));
+                    var curDate = DateTime.Now;
+                    Console.WriteLine("----> Started new call-02 at {0} <----", curDate);
+                    Task.Factory.StartNew(async () => Console.WriteLine("===>> Call back 2 returns ==> {0} at {1} then ended by {2}", await testJson(), curDate, DateTime.Now));
                 };
             }
 
