@@ -19,7 +19,7 @@ namespace AsycTaskTimerTest
                     new MediaTypeWithQualityHeaderValue("application/json"));
                 try
                 {
-                    var stringTask = await client.GetStringAsync("https://adapt.mcpl.ga/api/v1/team");
+                    var stringTask = await client.GetStringAsync("https://cat-fact.herokuapp.com/facts");
                     return stringTask.Length > 1;
                 }
                 catch (Exception e)
